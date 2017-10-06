@@ -9,9 +9,53 @@ import matplotlib.pyplot as plt
 # Problem 1: Gauss-Jordan Elimination
 ############################################################
 
+
+    
 def gauss_jordan(A):
     ## Add code here ##
-    return -1
+    
+    
+    print ("A shape: ", A.shape)
+    A = A.astype(float)
+    n = A.shape[0]
+    
+    #operae elimination elementary matrix 
+    for k in range(0, n):
+        print ("row: ", A[k, :])
+        #get maximum  value for rows i at or below kth column
+        iMax = np.argmax(abs(A[k:n, k]))      #indexMax is in subarray now
+        print ("indexMax: ", A[k:n, k], iMax, k, A[iMax+k][k])
+        if A[iMax+k][k] == 0:
+            return None
+        
+        #swap k and i*
+        A[[iMax, k]] = A[[k, iMax]]
+        print ("A: ", A)
+        
+        for j in range(k+1, n):
+            f = A[j][k]/A[k][k]
+            A[j, :] -= f * A[k, :]
+    
+    #operae reverse elimination elementary matrix 
+    
+    '''
+    for each row k = n;:::; 1 (i.e. in reverse) do
+        Ak = Ak=Akk
+        for each row j above k (i.e. j = k − 1;:::; 1) do
+            f = A Akk jk
+            Aj = Aj − fAk
+        end for
+        end for
+
+    '''
+    
+    for k in range(n-1, 0):  
+        A[k, :] = A[k, :] / A[k][k]
+        for j in range(k-1, 0):
+            f = A[j][k]/A[k][k]
+            A[j, :] -= f*A[:, k]
+    
+    return A
 
     
 ############################################################
@@ -78,4 +122,6 @@ def problem2_plots():
 
     
 if __name__=="__main__":
+    
+    #
     problem2_plots()
