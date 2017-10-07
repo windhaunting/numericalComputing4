@@ -120,21 +120,44 @@ def time_linear_regression(method,n,m,n_runs):
 def problem2_plots():
     ## Add code here ##
     
+    '''
     n = 1000
     timeInverseY = []
     timeMooreY = []
     timeX = range(25, 251)
     for m in timeX:
-        #X,y = generate_data(n, m)
-        timeInverseY.append(time_linear_regression('linear_regression_inverse', n, m, 5))
+        timeInverseY.append(time_linear_regression('linear_regression_inverse', n, m, 10))
         timeMooreY.append(time_linear_regression('linear_regression_moore_penrose', n, m, 10))
         
-    plt.plot(timeX, timeInverseY)
+    plt.figure()
+    plt.plot(timeX, timeInverseY, marker='o', linestyle='--', color='r', label='Inverse')
+    plt.plot(timeX, timeMooreY, marker='x', linestyle='--', color='g', label='Moore_penrose')
+    plt.legend(loc='upper right')
+    plt.xlabel("Covariate number m")
+    plt.ylabel("Time (s)")
+    plt. title ("Time for fixed n and varing m")
     plt.show()
-    plt.plot(timeX, timeMooreY)
+    
+    '''
+
+    m = 25
+    timeInverseY = []
+    timeMooreY = []
+    timeX = range(1000, 10001)
+    for n in timeX:
+        timeInverseY.append(time_linear_regression('linear_regression_inverse', n, m, 10))
+        timeMooreY.append(time_linear_regression('linear_regression_moore_penrose', n, m, 10))
+        
+    plt.figure()
+    plt.plot(timeX, timeInverseY, marker='o', linestyle='--', color='r', label='Inverse')
+    plt.plot(timeX, timeMooreY, marker='x', linestyle='--', color='g', label='Moore_penrose')
+    plt.legend(loc='upper right')
+    plt.xlabel("Number of data n")
+    plt.ylabel("Time (s)")
+    plt. title ("Time for fixed m and varing n")
     plt.show()
 
-    
+
 if __name__=="__main__":
     
     #
