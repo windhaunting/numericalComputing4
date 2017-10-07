@@ -15,47 +15,44 @@ def gauss_jordan(A):
     ## Add code here ##
     
     
-    print ("A shape: ", A.shape)
+    #print ("A shape: ", A.shape)
     A = A.astype(float)
     n = A.shape[0]
     
+    
+    #augment identity matrix
+    identityMat = np.identity(n).astype(float)
+    #print ("identityMat: ", identityMat)
+    AMat = np.concatenate((A, identityMat), axis=1)
+    
     #operae elimination elementary matrix 
     for k in range(0, n):
-        print ("row: ", A[k, :])
+        #print ("row: ", AMat[k, :])
         #get maximum  value for rows i at or below kth column
-        iMax = np.argmax(abs(A[k:n, k]))      #indexMax is in subarray now
-        print ("indexMax: ", A[k:n, k], iMax, k, A[iMax+k][k])
-        if A[iMax+k][k] == 0:
+        iMax = np.argmax(abs(AMat[k:n, k]))      #indexMax is in subarray now
+        #print ("indexMax: ", AMat[k:n, k], iMax, k, AMat[iMax+k][k])
+        if AMat[iMax+k][k] == 0:
             return None
         
         #swap k and i*
-        A[[iMax, k]] = A[[k, iMax]]
-        print ("A: ", A)
+        AMat[[iMax+k, k]] = AMat[[k, iMax+k]]
+        #print ("AMat: ", AMat)
         
         for j in range(k+1, n):
-            f = A[j][k]/A[k][k]
-            A[j, :] -= f * A[k, :]
+            f = AMat[j][k]/AMat[k][k]
+            AMat[j, :] -= f * AMat[k, :]
     
-    #operae reverse elimination elementary matrix 
+        #operae reverse elimination elementary matrix 
     
-    '''
-    for each row k = n;:::; 1 (i.e. in reverse) do
-        Ak = Ak=Akk
-        for each row j above k (i.e. j = k − 1;:::; 1) do
-            f = A Akk jk
-            Aj = Aj − fAk
-        end for
-        end for
-
-    '''
-    
-    for k in range(n-1, 0):  
-        A[k, :] = A[k, :] / A[k][k]
-        for j in range(k-1, 0):
-            f = A[j][k]/A[k][k]
-            A[j, :] -= f*A[:, k]
-    
-    return A
+    #print ("AMat after: ", AMat)
+    for k in range(n-1, -1, -1):  
+        AMat[k, :] = AMat[k, :] / AMat[k,k]
+        #print ("AMat later: ", k,  AMat)
+        for j in range(k-1, -1, -1):
+            f = AMat[j, k]/AMat[k, k]
+            AMat[j, :] -= f*AMat[k, :]
+    print ("AMat final: ", k,  AMat)
+    return AMat[:, n:]
 
     
 ############################################################
@@ -64,11 +61,15 @@ def gauss_jordan(A):
 
 def linear_regression_inverse(X,y):
     ## Add code here ##
-    return -1
+    
+    inter =  np.dot(np.linalg.inv(np.dot(np.transpose(X), X)), np.transpose(X))
+    return np.dot(inter, y)
+
     
 def linear_regression_moore_penrose(X,y):
     ## Add code here ##
-    return -1
+    inter = np.linalg.pinv(X)    
+    return np.dot(inter, y)
     
 def generate_data(n,m):
     """
@@ -118,7 +119,20 @@ def time_linear_regression(method,n,m,n_runs):
 
 def problem2_plots():
     ## Add code here ##
-    pass
+    
+    n = 1000
+    timeInverseY = []
+    timeMooreY = []
+    timeX = range(25, 251)
+    for m in timeX:
+        #X,y = generate_data(n, m)
+        timeInverseY.append(time_linear_regression('linear_regression_inverse', n, m, 5))
+        timeMooreY.append(time_linear_regression('linear_regression_moore_penrose', n, m, 10))
+        
+    plt.plot(timeX, timeInverseY)
+    plt.show()
+    plt.plot(timeX, timeMooreY)
+    plt.show()
 
     
 if __name__=="__main__":
