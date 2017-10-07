@@ -120,7 +120,7 @@ def time_linear_regression(method,n,m,n_runs):
 def problem2_plots():
     ## Add code here ##
     
-    '''
+    
     n = 1000
     timeInverseY = []
     timeMooreY = []
@@ -138,7 +138,7 @@ def problem2_plots():
     plt. title ("Time for fixed n and varing m")
     plt.show()
     
-    '''
+    
 
     m = 25
     timeInverseY = []
